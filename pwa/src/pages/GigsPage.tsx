@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,12 @@ import { gigs } from '@/lib/mockData';
 import { MapPin, ShieldCheck, Clock } from 'lucide-react';
 
 export function GigsPage() {
+    const [selectedCategory, setSelectedCategory] = useState<string>('Wszystkie');
+
+    const filteredGigs = gigs.filter(gig =>
+        selectedCategory === 'Wszystkie' || gig.category === selectedCategory
+    );
+
     return (
         <MainLayout>
             <div className="space-y-2">
@@ -14,15 +21,26 @@ export function GigsPage() {
 
             <div className="flex gap-2 overflow-x-auto pb-2">
                 {['Wszystkie', 'Naprawy', 'Opieka', 'Ogród', 'Tech'].map((cat, i) => (
-                    <Button key={cat} variant={i === 0 ? 'default' : 'outline'} size="sm" className="rounded-full">
+                    <Button
+                        key={cat}
+                        variant={selectedCategory === cat ? 'default' : 'outline'}
+                        size="sm"
+                        className="rounded-full"
+                        onClick={() => setSelectedCategory(cat)}
+                    >
                         {cat}
                     </Button>
                 ))}
             </div>
 
             <div className="space-y-4">
-                {gigs.map((gig) => (
+                {filteredGigs.map((gig) => (
                     <Card key={gig.id} className="overflow-hidden border-l-4 border-l-primary/50">
+                        {gig.imageUrl && (
+                            <div className="h-48 w-full overflow-hidden">
+                                <img src={gig.imageUrl} alt={gig.title} className="w-full h-full object-cover" />
+                            </div>
+                        )}
                         <CardHeader className="pb-3">
                             <div className="flex justify-between">
                                 <div>
@@ -62,8 +80,16 @@ export function GigsPage() {
                                     <img src={gig.author.avatar} alt={gig.author.name} />
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-sm">{gig.author.name}</p>
+                                    <div className="flex items-center gap-1">
+                                        <p className="font-semibold text-sm">{gig.author.name}</p>
+                                        {gig.author.verificationStatus === 'bank_id_verified' && (
+                                            <ShieldCheck className="w-4 h-4 text-blue-600 fill-blue-100" />
+                                        )}
+                                    </div>
                                     <p className="text-base text-muted-foreground">{gig.author.district}</p>
+                                    {gig.author.verificationStatus === 'bank_id_verified' && (
+                                        <p className="text-xs text-blue-600 font-medium mt-0.5">Zweryfikowany</p>
+                                    )}
                                 </div>
                                 <Button className="ml-auto" size="default">Zgłoś się</Button>
                             </div>

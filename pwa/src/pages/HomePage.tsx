@@ -4,17 +4,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Briefcase, Map, Heart, Users } from 'lucide-react';
 import { gigs, trips } from '@/lib/mockData';
+import { AppLauncher } from '@/components/features/AppLauncher';
 
 export function HomePage() {
     const navigate = useNavigate();
 
     return (
         <MainLayout>
-            {/* Welcome Section */}
-            <section className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-primary">Dzień dobry, Janino!</h1>
-                <p className="text-xl text-muted-foreground">Co chciałabyś dzisiaj zrobić?</p>
-            </section>
+            {/* Hero Section */}
+            <div className="relative h-56 w-full rounded-2xl overflow-hidden mb-6 shadow-md shrink-0">
+                <img src="/images/hero.png" className="w-full h-full object-cover" alt="Aktywni seniorzy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                    <div className="text-white space-y-1">
+                        <h1 className="text-3xl font-bold tracking-tight">Dzień dobry, Janino!</h1>
+                        <p className="text-lg opacity-90 text-white/90">Co chciałabyś dzisiaj zrobić?</p>
+                    </div>
+                </div>
+            </div>
 
             {/* Quick Actions - Large Touch Targets */}
             <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -113,6 +119,9 @@ export function HomePage() {
                     ))}
                 </div>
             </section>
-        </MainLayout>
+
+            {/* App Launcher / Communication Hub */}
+            <AppLauncher />
+        </MainLayout >
     );
 }

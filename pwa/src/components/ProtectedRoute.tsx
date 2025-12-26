@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { AuthRedirect } from '@/components/auth/AuthWrappers';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -21,8 +22,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
 
     if (!user) {
-        // Redirect to login, but save the attempted location
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        // Redirect to Clerk Sign In or Mock
+        return <AuthRedirect />;
     }
 
     return <>{children}</>;

@@ -26,7 +26,7 @@ export const gigs: Gig[] = [
             name: 'Tadeusz Nowak',
             avatar: 'https://ui.shadcn.com/avatars/02.png',
             role: 'senior',
-            verificationStatus: 'phone_verified',
+            verificationStatus: 'bank_id_verified',
             district: 'Poznań - Grunwald',
             badges: [],
         },
@@ -44,6 +44,7 @@ export const gigs: Gig[] = [
         urgent: false,
         author: currentUser,
         createdAt: '2025-12-19T14:30:00Z',
+        imageUrl: '/images/garden.png'
     }
 ];
 
@@ -56,7 +57,7 @@ export const trips: Trip[] = [
         price: 1200,
         matchmakingAvailable: true,
         accessibilityTags: ['Winda', 'Płaski teren', 'Dieta lekkostrawna'],
-        imageUrl: 'https://images.unsplash.com/photo-1561577553-621183296c02?q=80&w=1000&auto=format&fit=crop',
+        imageUrl: '/images/ciechocinek.png',
     },
     {
         id: 't2',

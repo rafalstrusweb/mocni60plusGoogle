@@ -44,7 +44,7 @@ export function SignupPage() {
 
         try {
             await signUp(email, password, displayName);
-            navigate('/');
+            navigate('/onboarding');
         } catch (err: any) {
             if (err.code === 'auth/email-already-in-use') {
                 setError('Ten adres email jest już zarejestrowany');
@@ -63,7 +63,7 @@ export function SignupPage() {
         setLoading(true);
         try {
             await signInWithGoogle();
-            navigate('/');
+            navigate('/onboarding');
         } catch (err: any) {
             setError('Wystąpił błąd podczas rejestracji przez Google');
         } finally {

@@ -4,8 +4,10 @@ import { GigsPage } from './pages/GigsPage'
 import { TravelPage } from './pages/TravelPage'
 import { CommunityPage } from './pages/CommunityPage'
 import { HealthPage } from './pages/HealthPage'
-import { LoginPage } from './pages/LoginPage'
-import { SignupPage } from './pages/SignupPage'
+import { OnboardingPage } from './pages/OnboardingPage'
+import { CameraPage } from './pages/CameraPage'
+import { VerificationPage } from './pages/VerificationPage'
+import { LocalEventsPage } from './pages/LocalEventsPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 function App() {
@@ -13,8 +15,7 @@ function App() {
         <div className="min-h-screen bg-background font-sans text-foreground antialiased">
             <Routes>
                 {/* Public routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
 
                 {/* Protected routes */}
                 <Route path="/" element={
@@ -40,6 +41,21 @@ function App() {
                 <Route path="/health" element={
                     <ProtectedRoute>
                         <HealthPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/camera" element={
+                    <ProtectedRoute>
+                        <CameraPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/verify" element={
+                    <ProtectedRoute>
+                        <VerificationPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/events" element={
+                    <ProtectedRoute>
+                        <LocalEventsPage />
                     </ProtectedRoute>
                 } />
 

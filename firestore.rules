@@ -1,0 +1,76 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- HELPER FUNCTIONS ---
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // --- RULES ---
+
+    // 1. NOTIFICATIONS
+    // Strict tenant isolation: Users can only see their OWN notifications
+    match /users/{userId}/notifications/{notificationId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 2. USER PROFILES (PII - Personal Identifiable Information)
+    // RODO Compliance: Only the user can edit their profile.
+    // Others might need read access for public info (name, avatar), but sensitive info should be protected.
+    match /users/{userId}/profile/public {
+      allow read: if isAuthenticated(); // Publicly visible to other logged-in users
+      allow write: if isOwner(userId);
+    }
+
+    match /users/{userId}/profile/private {
+      allow read, write: if isOwner(userId); // Private contact info, etc.
+    }
+
+
+    // 2. MEDICAL DATA (HIPAA - Strict Isolation)
+    // Access only allowing owner to read/write specific flat health collections
+    match /users/{userId}/medical_vitals/{docId} {
+      allow read, write: if isOwner(userId);
+    }
+    match /users/{userId}/medical_meds/{docId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 4. PUBLIC DATA (Jobs / Travel)
+    // Read-only for users, Write restricted to Admin (via backend/admin SDK) or specific creator logic
+    match /gigs/{gigId} {
+        allow read: if isAuthenticated();
+        // Allow create if user is authenticated (simple version for MVP)
+        allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
+        // Allow update/delete only by author
+        allow update, delete: if isOwner(resource.data.authorId);
+    }
+    
+    match /trips/{tripId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
+        allow update, delete: if isOwner(resource.data.authorId);
+    }
+
+    // 5. AUDIT LOGS (Immutable)
+    // Write-only for normal users. No deletes/updates allowed.
+    match /audit_logs/{logId} {
+      allow create: if isAuthenticated();
+      allow read, update, delete: if false; // Only Admin SDK can read
+    }
+
+    // 6. FCM TOKENS (Push)
+    match /users/{userId}/fcmTokens/{tokenId} {
+       allow read, write: if isOwner(userId);
+    }
+  }
+}

@@ -22,6 +22,7 @@ export interface Gig {
     urgent: boolean;
     author: User;
     createdAt: string;
+    imageUrl?: string;
 }
 
 export interface Trip {
